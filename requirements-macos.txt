@@ -1,0 +1,4 @@
+onnx
+tensorflow-macos
+tf2onnx
+torch

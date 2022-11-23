@@ -1,0 +1,6 @@
+netron
+onnx
+streamlit
+tensorflow-macos
+tf2onnx
+torch
