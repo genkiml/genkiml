@@ -5,7 +5,7 @@ int main()
 {
     auto model = genki::ml::load_model();
 
-    const std::array<float, 100> input { };
+    const std::array<float, 100> input {};
 
     const auto ret = model->infer({input});
 

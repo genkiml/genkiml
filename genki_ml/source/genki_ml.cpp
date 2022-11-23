@@ -3,6 +3,7 @@
 #include <onnxruntime_cxx_api.h>
 #include <range/v3/view.hpp>
 #include <range/v3/algorithm.hpp>
+#include <range/v3/numeric.hpp>
 #include <string>
 
 #include "cmrc/cmrc.hpp"
@@ -23,7 +24,7 @@ static void print_model_info(const Ort::Session& session)
         };
 
         fmt::print("  Dimensions: {}\n", ti.GetDimensionsCount());
-        fmt::print("  Element count: {}\n", ti.GetElementCount());
+//        fmt::print("  Element count: {}\n", ti.GetElementCount());
         fmt::print("  Element type: {}\n", type_names[ti.GetElementType()]);
         fmt::print("  Shape: {}\n", ti.GetShape());
     };
@@ -62,19 +63,19 @@ static auto get_default_session_options() noexcept
 
 static auto get_input_names(const Ort::Session& session)
 {
-    return ranges::views::ints(size_t{}, session.GetInputCount())
+    return ranges::views::ints(size_t {}, session.GetInputCount())
            | ranges::views::transform([&](size_t i) { return std::string(session.GetInputNameAllocated(i, Ort::AllocatorWithDefaultOptions()).get()); })
            | ranges::to<std::vector>();
 }
 
 static auto get_output_names(const Ort::Session& session)
 {
-    return ranges::views::ints(size_t{}, session.GetOutputCount())
+    return ranges::views::ints(size_t {}, session.GetOutputCount())
            | ranges::views::transform([&](size_t i) { return std::string(session.GetOutputNameAllocated(i, Ort::AllocatorWithDefaultOptions()).get()); })
            | ranges::to<std::vector>();
 }
 
-template <typename Rng>
+template<typename Rng>
 constexpr bool has_dynamic_shape(Rng&& rng) { return ranges::any_of(rng, [](int64_t dim) { return dim == -1; }); }
 
 static auto get_input_tensor_shape_func(const Ort::Session& session)
@@ -82,9 +83,13 @@ static auto get_input_tensor_shape_func(const Ort::Session& session)
     return [&](size_t i)
     {
         auto shp = session.GetInputTypeInfo(i).GetTensorTypeAndShapeInfo().GetShape();
-        assert(!has_dynamic_shape(shp));
 
-        return shp;
+        if (has_dynamic_shape(shp))
+            fmt::print("Warning: Input tensor has dynamic shape: {}\n", shp);
+
+        return shp
+               | ranges::views::transform([](const auto& d) { return std::abs(d); })
+               | ranges::to<std::vector>();
     };
 }
 
@@ -93,15 +98,24 @@ static auto get_output_tensor_shape_func(const Ort::Session& session)
     return [&](size_t i)
     {
         auto shp = session.GetOutputTypeInfo(i).GetTensorTypeAndShapeInfo().GetShape();
-        assert(!has_dynamic_shape(shp));
 
-        return shp;
+        if (has_dynamic_shape(shp))
+            fmt::print("Warning: Output tensor has dynamic shape: {}\n", shp);
+
+        return shp
+               | ranges::views::transform([](const auto& d) { return std::abs(d); })
+               | ranges::to<std::vector>();
     };
 }
 
-static auto get_output_tensor_buffer_func(const Ort::Session& session)
+static auto get_output_tensor_buffer_func(const std::vector<std::vector<int64_t>>& shapes)
 {
-    return [&](size_t i) { return std::vector<float>(session.GetOutputTypeInfo(i).GetTensorTypeAndShapeInfo().GetElementCount()); };
+    return [=](size_t i)
+    {
+        const auto element_count = ranges::accumulate(shapes[i], size_t {1}, [](size_t acc, int64_t d) { return acc * d; });
+
+        return std::vector<float>(element_count);
+    };
 }
 
 static auto cstrs(gsl::span<const std::string> strs)
@@ -114,7 +128,7 @@ static auto cstrs(gsl::span<const std::string> strs)
 template<typename F>
 static auto get_tensor_info(size_t count, F&& func)
 {
-    return ranges::views::ints(size_t{}, count)
+    return ranges::views::ints(size_t {}, count)
            | ranges::views::transform(func)
            | ranges::to<std::vector>();
 }
@@ -131,7 +145,7 @@ struct Model::Impl
               output_names(get_output_names(session)),
               input_name_cstrs(cstrs(input_names)),
               output_name_cstrs(cstrs(output_names)),
-              output_buffers(get_tensor_info(session.GetOutputCount(), get_output_tensor_buffer_func(session)))
+              output_buffers(get_tensor_info(session.GetOutputCount(), get_output_tensor_buffer_func(output_shapes)))
     {
         print_model_info(session);
     }

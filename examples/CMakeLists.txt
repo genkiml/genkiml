@@ -3,7 +3,7 @@ function(genki_ml_example example_name model_filepath)
 
     set(executable_name genki_ml_${example_name})
 
-    add_executable(${executable_name} ${CMAKE_CURRENT_SOURCE_DIR}/${example_name}.cpp)
+    add_executable(${executable_name} ${CMAKE_CURRENT_SOURCE_DIR}/${example_name}/main.cpp)
     target_link_libraries(${executable_name} genki_ml)
 
     # TODO: Figure out how to do this less explicitly
@@ -16,4 +16,4 @@ function(genki_ml_example example_name model_filepath)
     endif()
 endfunction()
 
-genki_ml_example(single_sample "${CMAKE_CURRENT_SOURCE_DIR}/model_tf.onnx")
+genki_ml_example(keras_model "${CMAKE_CURRENT_SOURCE_DIR}/keras_model/fc_model")
