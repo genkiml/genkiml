@@ -1,6 +1,4 @@
-# Genki ML
-
-![](genki-ml.png)
+![](logo.png)
 
 ## Neural networks, anywhere
 
