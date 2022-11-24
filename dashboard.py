@@ -61,7 +61,7 @@ def main():
     if st.button("View model graph"):
         netron.start("model.onnx")
 
-    path_to_copy = Path("genki_ml")
+    path_to_copy = Path("genkiml")
     out_file = package_into_zip(path_to_copy)
 
     st.write("Model has been compiled, press button to download")

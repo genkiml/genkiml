@@ -93,7 +93,7 @@ def main(model_path: str, opset: int, input_shape: tuple[int], output_path: str,
         file_path = output_path / "model.onnx"
         onnx.save(model_onnx, file_path)
     else:
-        file_path = package_into_zip(Path(__file__).parent / "genki_ml", model_onnx, output_path)
+        file_path = package_into_zip(Path(__file__).parent / "genkiml", model_onnx, output_path)
     print(f"Exported to {file_path.resolve()}")
 
 

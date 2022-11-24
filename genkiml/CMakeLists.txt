@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.17)
 
-set(genki_ml_lib genki_ml)
+set(genkiml_lib genkiml)
 set(CMAKE_CXX_STANDARD 17)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/fetch_from_git.cmake)
@@ -74,26 +74,26 @@ else ()
                           )
 endif ()
 
-add_library(${genki_ml_lib}
+add_library(${genkiml_lib}
             STATIC
-            ${CMAKE_CURRENT_SOURCE_DIR}/source/genki_ml.cpp)
+            ${CMAKE_CURRENT_SOURCE_DIR}/source/genkiml.cpp)
 
-target_include_directories(${genki_ml_lib}
+target_include_directories(${genkiml_lib}
                            PUBLIC
                            ${CMAKE_CURRENT_SOURCE_DIR}/source
                            ${onnxruntime_source_dir}/include/onnxruntime/core/session
                            )
 
-target_link_libraries(${genki_ml_lib}
+target_link_libraries(${genkiml_lib}
                       PUBLIC
                       fmt
                       range-v3
                       onnxruntime_libs
                       )
 
-function (genki_ml_link_model target_name model_filepath)
+function (genkiml_link_model target_name model_filepath)
     set(model_out_dir ${CMAKE_BINARY_DIR})
-    genki_ml_convert_model(${model_filepath} ${model_out_dir})
+    genkiml_convert_model(${model_filepath} ${model_out_dir})
     get_filename_component(model_name ${model_filepath} NAME_WE)
 
     cmrc_add_resource_library(${model_name}_rc
@@ -102,6 +102,6 @@ function (genki_ml_link_model target_name model_filepath)
                               PREFIX models
                               ${model_out_dir}/${model_name}.onnx)
 
-    target_link_libraries(genki_ml PUBLIC ${model_name}_rc)
-    target_link_libraries(${target_name} PUBLIC genki_ml)
+    target_link_libraries(genkiml PUBLIC ${model_name}_rc)
+    target_link_libraries(${target_name} PUBLIC genkiml)
 endfunction ()
