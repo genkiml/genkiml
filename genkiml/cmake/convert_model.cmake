@@ -6,7 +6,13 @@ function (genkiml_convert_model model_filepath output_path)
         message("Creating virtual environment at ${venv}")
 
         execute_process(COMMAND ${Python_EXECUTABLE} -m venv ${venv})
-        execute_process(COMMAND source ${venv}/bin/activate)
+
+        if (MSVC)
+            cmake_path(CONVERT ${venv}/Scripts/activate.bat TO_NATIVE_PATH_LIST venv_activate_bat)
+            execute_process(COMMAND ${venv_activate_bat})
+        else ()
+            execute_process(COMMAND source ${venv}/bin/activate)
+        endif ()
 
         # TODO: Only on macOS (M1)
         set(builder_py "${Python_SITELIB}/google/protobuf/internal/builder.py")
