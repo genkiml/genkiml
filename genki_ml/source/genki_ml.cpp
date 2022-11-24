@@ -210,12 +210,17 @@ Model::~Model() = default;
 //======================================================================================================================
 std::unique_ptr<Model> load_model()
 {
-    auto fs = cmrc::files::get_filesystem();
+    constexpr auto prefix = "models";
 
-    constexpr auto model_filepath = "model.onnx";
-    assert(fs.is_file(model_filepath));
+    auto fs         = cmrc::files::get_filesystem();
+    auto models_dir = fs.iterate_directory(prefix);
+    assert(std::distance(models_dir.begin(), models_dir.end()) == 1); // Only embedding one model atm
 
-    const auto model_file = fs.open(model_filepath);
+    const auto model = fmt::format("{}/{}", prefix, (*models_dir.begin()).filename());
+
+    assert(fs.is_file(model));
+
+    const auto model_file = fs.open(model);
     const auto bytes      = gsl::as_bytes(gsl::span(model_file.cbegin(), model_file.cend()));
 
     return std::make_unique<Model>(bytes);

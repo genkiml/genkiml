@@ -1,4 +1,4 @@
-function (genki_ml_convert_model model_filepath)
+function (genki_ml_convert_model model_filepath output_path)
     find_package(Python COMPONENTS Interpreter)
 
     if (Python_FOUND)
@@ -24,10 +24,15 @@ function (genki_ml_convert_model model_filepath)
             set(requirements_txt ${genki_ml_root}/requirements.txt)
         endif ()
 
-        cmake_path(CONVERT ${model_filepath} TO_NATIVE_PATH_LIST model_native_path)
+        cmake_path(CONVERT ${output_path} TO_NATIVE_PATH_LIST output_path_native)
+        cmake_path(CONVERT ${model_filepath} TO_NATIVE_PATH_LIST model_path_native)
 
         execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r ${requirements_txt})
-        execute_process(COMMAND ${Python_EXECUTABLE} ${genki_ml_root}/genkiml.py ${model_native_path} --model-only --output-path ${CMAKE_BINARY_DIR})
+        execute_process(COMMAND ${Python_EXECUTABLE} ${genki_ml_root}/genkiml.py ${model_path_native} --model-only --output-path ${output_path_native})
+
+        get_filename_component(model_name ${model_filepath} NAME_WE)
+        file(RENAME ${output_path}/model.onnx ${output_path}/${model_name}.onnx)
+
         execute_process(COMMAND ${venv}/bin/deactivate)
     else ()
         message(WARNING "Python not found")

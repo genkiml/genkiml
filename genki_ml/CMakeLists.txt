@@ -8,6 +8,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/convert_model.cmake)
 
 set(ONNXRUNTIME_VERSION "1.13.1")
 
+
 if (NOT TARGET fmt)
     fetch_from_git(fmt "https://github.com/fmtlib/fmt.git")
 endif ()
@@ -19,6 +20,8 @@ endif ()
 if (NOT TARGET GSL)
     fetch_from_git(gsl "https://github.com/microsoft/GSL.git" GIT_TAG main)
 endif ()
+
+fetch_from_git(cmrc https://github.com/vector-of-bool/cmrc.git ADD_SUBDIRECTORY)
 
 fetch_from_git(onnxruntime "https://github.com/microsoft/onnxruntime.git"
                GIT_TAG main
@@ -71,13 +74,6 @@ else ()
                           )
 endif ()
 
-fetch_from_git(cmrc https://github.com/vector-of-bool/cmrc.git ADD_SUBDIRECTORY)
-
-cmrc_add_resource_library(${genki_ml_lib}_rc
-                          NAMESPACE files
-                          WHENCE ${CMAKE_BINARY_DIR}
-                          ${CMAKE_BINARY_DIR}/model.onnx)
-
 add_library(${genki_ml_lib}
             STATIC
             ${CMAKE_CURRENT_SOURCE_DIR}/source/genki_ml.cpp)
@@ -90,8 +86,22 @@ target_include_directories(${genki_ml_lib}
 
 target_link_libraries(${genki_ml_lib}
                       PUBLIC
-                      ${genki_ml_lib}_rc
                       fmt
                       range-v3
                       onnxruntime_libs
                       )
+
+function (genki_ml_link_model target_name model_filepath)
+    set(model_out_dir ${CMAKE_BINARY_DIR})
+    genki_ml_convert_model(${model_filepath} ${model_out_dir})
+    get_filename_component(model_name ${model_filepath} NAME_WE)
+
+    cmrc_add_resource_library(${model_name}_rc
+                              NAMESPACE files
+                              WHENCE ${model_out_dir}
+                              PREFIX models
+                              ${model_out_dir}/${model_name}.onnx)
+
+    target_link_libraries(genki_ml PUBLIC ${model_name}_rc)
+    target_link_libraries(${target_name} PUBLIC genki_ml)
+endfunction ()

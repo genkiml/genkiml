@@ -1,10 +1,8 @@
 function(genki_ml_example example_name model_filepath)
-    genki_ml_convert_model(${model_filepath})
-
     set(executable_name genki_ml_${example_name})
 
     add_executable(${executable_name} ${CMAKE_CURRENT_SOURCE_DIR}/${example_name}/main.cpp)
-    target_link_libraries(${executable_name} genki_ml)
+    genki_ml_link_model(${executable_name} ${model_filepath})
 
     # TODO: Figure out how to do this less explicitly
     if (MSVC)
