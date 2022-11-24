@@ -71,8 +71,7 @@ else ()
                           )
 endif ()
 
-# https://github.com/vector-of-bool/cmrc
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/CMakeRC.cmake)
+fetch_from_git(cmrc https://github.com/vector-of-bool/cmrc.git ADD_SUBDIRECTORY)
 
 cmrc_add_resource_library(${genki_ml_lib}_rc
                           NAMESPACE files
