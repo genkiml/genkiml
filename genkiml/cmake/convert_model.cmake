@@ -30,14 +30,18 @@ function (genkiml_convert_model model_filepath output_path)
             set(requirements_txt ${genkiml_root}/requirements.txt)
         endif ()
 
-        cmake_path(CONVERT ${output_path} TO_NATIVE_PATH_LIST output_path_native)
+        get_filename_component(model_name ${model_filepath} NAME_WE)
+
+        set(model_out_path ${output_path}/${model_name})
+        file(MAKE_DIRECTORY ${model_out_path})
+        cmake_path(CONVERT ${model_out_path} TO_NATIVE_PATH_LIST model_out_path_native)
         cmake_path(CONVERT ${model_filepath} TO_NATIVE_PATH_LIST model_path_native)
 
         execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r ${requirements_txt})
-        execute_process(COMMAND ${Python_EXECUTABLE} ${genkiml_root}/genkiml.py ${model_path_native} --model-only --output-path ${output_path_native})
+        execute_process(COMMAND ${Python_EXECUTABLE} ${genkiml_root}/genkiml.py ${model_path_native} --model-only --output-path ${model_out_path_native})
 
-        get_filename_component(model_name ${model_filepath} NAME_WE)
-        file(RENAME ${output_path}/model.onnx ${output_path}/${model_name}.onnx)
+        file(RENAME ${model_out_path}/model.onnx ${output_path}/${model_name}.onnx)
+        file(REMOVE_RECURSE ${model_out_path})
 
         execute_process(COMMAND ${venv}/bin/deactivate)
     else ()
