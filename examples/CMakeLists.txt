@@ -1,8 +1,9 @@
 function(genkiml_example example_name model_filepath)
-    set(executable_name genkiml_${example_name})
+    set(executable_name genkiml_example_${example_name})
 
     add_executable(${executable_name} ${CMAKE_CURRENT_SOURCE_DIR}/${example_name}/main.cpp)
-    genkiml_link_model(${executable_name} ${model_filepath})
+    genkiml_compile_model(${executable_name} ${model_filepath})
+    target_link_libraries(${executable_name} PUBLIC genkiml)
 
     # TODO: Figure out how to do this less explicitly
     if (MSVC)
@@ -14,4 +15,5 @@ function(genkiml_example example_name model_filepath)
     endif()
 endfunction()
 
-genkiml_example(keras_model "${CMAKE_CURRENT_SOURCE_DIR}/keras_model/fc_model")
+genkiml_example(keras "${CMAKE_CURRENT_SOURCE_DIR}/keras/fc_model")
+genkiml_example(onnx "${CMAKE_CURRENT_SOURCE_DIR}/onnx/model.onnx")
