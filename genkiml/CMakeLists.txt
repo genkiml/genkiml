@@ -87,21 +87,28 @@ target_include_directories(${genkiml_lib}
 target_link_libraries(${genkiml_lib}
                       PUBLIC
                       fmt
+                      GSL
                       range-v3
                       onnxruntime_libs
                       )
 
-function (genkiml_link_model target_name model_filepath)
+function (genkiml_compile_model target_name model_filepath)
     set(model_out_dir ${CMAKE_BINARY_DIR})
     genkiml_convert_model(${model_filepath} ${model_out_dir})
     get_filename_component(model_name ${model_filepath} NAME_WE)
 
-    cmrc_add_resource_library(${model_name}_rc
+    set(model_lib _${model_name})
+    set(genkiml_src ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../genkiml/source)
+
+    cmrc_add_resource_library(${model_lib}
                               NAMESPACE files
                               WHENCE ${model_out_dir}
                               PREFIX models
-                              ${model_out_dir}/${model_name}.onnx)
+                              ${model_out_dir}/${model_name}.onnx
+                              )
 
-    target_link_libraries(genkiml PUBLIC ${model_name}_rc)
-    target_link_libraries(${target_name} PUBLIC genkiml)
+    target_sources(${model_lib} PRIVATE ${genkiml_src}/load_model.cpp)
+    target_link_libraries(${model_lib} PUBLIC fmt GSL)
+
+    target_link_libraries(${target_name} PUBLIC ${model_lib})
 endfunction ()
