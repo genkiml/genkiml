@@ -11,7 +11,7 @@ using BufferViews = std::vector<gsl::span<const float>>;
 
 struct Model
 {
-    explicit Model(gsl::span<const gsl::byte> model_data, std::string_view log_id);
+    explicit Model(gsl::span<const gsl::byte> model_data, std::string_view log_id = "");
     ~Model();
 
     auto infer(const BufferViews&) -> BufferViews;

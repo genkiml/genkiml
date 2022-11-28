@@ -133,7 +133,7 @@ static auto get_tensor_info(size_t count, F&& func)
 //======================================================================================================================
 struct Model::Impl
 {
-    explicit Impl(gsl::span<const gsl::byte> model_data, std::string_view log_id = "")
+    explicit Impl(gsl::span<const gsl::byte> model_data, std::string_view log_id)
             : env(ORT_LOGGING_LEVEL_WARNING, log_id.data()),
               session(env, model_data.data(), model_data.size(), get_default_session_options()),
               input_shapes(get_tensor_info(session.GetInputCount(), get_input_tensor_shape_func(session))),
