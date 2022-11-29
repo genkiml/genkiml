@@ -11,12 +11,18 @@ option(GENKIML_BUILD_TESTS "Build Genki ML examples" ON)
 option(GENKIML_BUILD_EXAMPLES "Build Genki ML examples" ON)
 option(GENKIML_BUILD_ONNXRUNTIME_STATIC_LIB "Build and link static library for onnxruntime" OFF)
 
-add_subdirectory(genkiml)
+find_package(Python COMPONENTS Interpreter)
 
-if (${GENKIML_BUILD_EXAMPLES})
-    add_subdirectory(examples)
-endif ()
-
-if (GENKIML_BUILD_TESTS)
-    add_subdirectory(tests)
+if (Python_FOUND)
+    execute_process(COMMAND ${Python_EXECUTABLE} --version)
 endif()
+
+#add_subdirectory(genkiml)
+#
+#if (${GENKIML_BUILD_EXAMPLES})
+#    add_subdirectory(examples)
+#endif ()
+#
+#if (GENKIML_BUILD_TESTS)
+#    add_subdirectory(tests)
+#endif()
