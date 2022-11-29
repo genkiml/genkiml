@@ -20,19 +20,19 @@ jobs:
     strategy:
       matrix:
         config:
-#          - {
-#            name: "Windows Latest - MSVC",
-#            os: windows-latest,
-#            cc: "cl", cxx: "cl",
-#            extra_cmake_flags: "-G \"Visual Studio 16\"",
-#          }
           - {
-            name: "MacOS Latest - Clang",
-            os: macos-latest,
-            cc: "cc", cxx: "c++",
-            extra_cmake_flags: "-DCMAKE_OSX_ARCHITECTURES=x86_64 -DAPPLE=1" ,
-            build_options: "-j16",
+            name: "Windows Latest - MSVC",
+            os: windows-latest,
+            cc: "cl", cxx: "cl",
+            extra_cmake_flags: "-G \"Visual Studio 16\"",
           }
+#          - {
+#            name: "MacOS Latest - Clang",
+#            os: macos-latest,
+#            cc: "cc", cxx: "c++",
+#            extra_cmake_flags: "-DCMAKE_OSX_ARCHITECTURES=x86_64 -DAPPLE=1" ,
+#            build_options: "-j16",
+#          }
 #          - {
 #            name: "Ubuntu Latest",
 #            os: ubuntu-latest,
@@ -45,18 +45,18 @@ jobs:
         with:
           submodules: 'recursive'
 
-      - name: Cache CMake
-        id: cache-cmake
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-cmake
-        with:
-          path: ${{ github.workspace }}/cmake-build-debug/
-          key: ${{ runner.os }}-build-${{ env.cache-name }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+#      - name: Cache CMake
+#        id: cache-cmake
+#        uses: actions/cache@v3
+#        env:
+#          cache-name: cache-cmake
+#        with:
+#          path: ${{ github.workspace }}/cmake-build-debug/
+#          key: ${{ runner.os }}-build-${{ env.cache-name }}
+#          restore-keys: |
+#            ${{ runner.os }}-build-${{ env.cache-name }}
+#            ${{ runner.os }}-build-
+#            ${{ runner.os }}-
 
       - name: Setup MSVC
         if: runner.os == 'Windows'
