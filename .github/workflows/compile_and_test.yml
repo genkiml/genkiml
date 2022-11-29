@@ -26,13 +26,13 @@ jobs:
 #            cc: "cl", cxx: "cl",
 #            extra_cmake_flags: "-G \"Visual Studio 16\"",
 #          }
-#          - {
-#            name: "MacOS Latest - Clang",
-#            os: macos-latest,
-#            cc: "cc", cxx: "c++",
-#            extra_cmake_flags: "-DCMAKE_OSX_ARCHITECTURES=x86_64",
-#            build_options: "-j16",
-#          }
+          - {
+            name: "MacOS Latest - Clang",
+            os: macos-latest,
+            cc: "cc", cxx: "c++",
+            extra_cmake_flags: "-DCMAKE_OSX_ARCHITECTURES=x86_64",
+            build_options: "-j16",
+          }
           - {
             name: "Ubuntu Latest",
             os: ubuntu-latest,
