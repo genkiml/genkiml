@@ -52,7 +52,7 @@ function (genkiml_convert_model model_filepath output_path)
         file(RENAME ${model_out_path}/model.onnx ${output_path}/${model_name}.onnx)
         file(REMOVE_RECURSE ${model_out_path})
 
-#        execute_process(COMMAND ${venv}/bin/deactivate)
+        execute_process(COMMAND ${venv}/bin/deactivate)
     else ()
         message(WARNING "Python not found")
     endif ()
