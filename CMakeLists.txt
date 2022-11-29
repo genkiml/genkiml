@@ -15,6 +15,15 @@ find_package(Python COMPONENTS Interpreter)
 
 if (Python_FOUND)
     execute_process(COMMAND ${Python_EXECUTABLE} --version)
+
+    set(venv ${CMAKE_CURRENT_BINARY_DIR}/.venv)
+    message("Creating virtual environment at ${venv}")
+
+    execute_process(COMMAND ${Python_EXECUTABLE} -m venv ${venv})
+    execute_process(COMMAND source ${venv}/bin/activate)
+    execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r requirements-macos.txt)
+    execute_process(COMMAND ${Python_EXECUTABLE} ${genkiml_root}/genkiml.py --help)
+    execute_process(COMMAND ${venv}/bin/deactivate)
 endif()
 
 #add_subdirectory(genkiml)
