@@ -21,7 +21,7 @@ if (Python_FOUND)
 
     execute_process(COMMAND ${Python_EXECUTABLE} -m venv ${venv})
     execute_process(COMMAND source ${venv}/bin/activate)
-    execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r requirements-macos.txt)
+    execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r requirements.txt)
     execute_process(COMMAND ${Python_EXECUTABLE} ${genkiml_root}/genkiml.py --help)
     execute_process(COMMAND ${venv}/bin/deactivate)
 endif()
