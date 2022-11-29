@@ -28,7 +28,7 @@ fetch_from_git(onnxruntime "https://github.com/microsoft/onnxruntime.git"
                SOURCE_DIRECTORY_VAR onnxruntime_source_dir
                BINARY_DIRECTORY_VAR onnxruntime_binary_dir)
 
-if (NOT GENKI_ML_BUILD_ONNXRUNTIME_STATIC_LIB)
+if (NOT GENKIML_BUILD_ONNXRUNTIME_STATIC_LIB)
     message("Using dynamic library for onnxruntime")
 
     include(cmake/fetch_onnxruntime_dynamic_lib.cmake)

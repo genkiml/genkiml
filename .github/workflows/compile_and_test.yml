@@ -1,0 +1,62 @@
+name: compile_and_test
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build_and_test:
+    name: Build & test on ${{ matrix.config.os }} with ${{ matrix.config.cc }} and ${{ matrix.config.cxx }}.
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      matrix:
+        config:
+#          - {
+#            name: "Windows Latest - MSVC",
+#            os: windows-latest,
+#            cc: "cl", cxx: "cl",
+#            extra_cmake_flags: "-G \"Visual Studio 16\"",
+#          }
+#          - {
+#            name: "MacOS Latest - Clang",
+#            os: macos-latest,
+#            cc: "cc", cxx: "c++",
+#            extra_cmake_flags: "-DCMAKE_OSX_ARCHITECTURES=x86_64",
+#            build_options: "-j16",
+#          }
+          - {
+            name: "Ubuntu Latest"
+          }
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+
+      - name: Setup directories
+        run: mkdir build_release build_debug build_tests_debug build_tests_release
+
+      - name: Setup MSVC
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: CMake Configure (Debug)
+        run: cmake -B build_debug -DCMAKE_BUILD_TYPE=Debug -DGENKIML_BUILD_TESTS=ON -DGENKIML_BUILD_EXAMPLES=ON ${{ matrix.config.extra_cmake_flags }} -DCMAKE_C_COMPILER=${{ matrix.config.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
+
+      - name: CMake Build (Debug)
+        run: cmake --build build_debug -- ${{ matrix.config.build_options }}
+
+      - name: Run tests
+        run: |
+          cmake --build build_debug --target genkiml_tests
+          ./build_debug/tests/genkiml_tests
