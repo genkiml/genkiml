@@ -17,6 +17,6 @@ if (${GENKIML_BUILD_EXAMPLES})
     add_subdirectory(examples)
 endif ()
 
-if (GENKIML_BUILD_TESTS)
+if (${GENKIML_BUILD_TESTS})
     add_subdirectory(tests)
 endif()

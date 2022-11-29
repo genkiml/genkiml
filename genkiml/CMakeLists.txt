@@ -22,10 +22,10 @@ endif ()
 
 fetch_from_git(cmrc https://github.com/vector-of-bool/cmrc.git ADD_SUBDIRECTORY)
 
-fetch_from_git(onnxruntime "https://github.com/microsoft/onnxruntime.git"
-               GIT_TAG main
-               SOURCE_DIRECTORY_VAR onnxruntime_source_dir
-               BINARY_DIRECTORY_VAR onnxruntime_binary_dir)
+#fetch_from_git(onnxruntime "https://github.com/microsoft/onnxruntime.git"
+#               GIT_TAG main
+#               SOURCE_DIRECTORY_VAR onnxruntime_source_dir
+#               BINARY_DIRECTORY_VAR onnxruntime_binary_dir)
 
 if (NOT GENKIML_BUILD_ONNXRUNTIME_STATIC_LIB)
     message("Using dynamic library for onnxruntime")
@@ -80,7 +80,7 @@ add_library(${genkiml_lib}
 target_include_directories(${genkiml_lib}
                            PUBLIC
                            ${CMAKE_CURRENT_SOURCE_DIR}/source
-                           ${onnxruntime_source_dir}/include/onnxruntime/core/session
+#                           ${onnxruntime_source_dir}/include/onnxruntime/core/session
                            )
 
 target_link_libraries(${genkiml_lib}
