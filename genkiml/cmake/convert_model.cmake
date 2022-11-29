@@ -14,18 +14,11 @@ function (genkiml_convert_model model_filepath output_path)
             execute_process(COMMAND source ${venv}/bin/activate)
         endif ()
 
-        # TODO: Only on macOS (M1)
-        set(builder_py "${Python_SITELIB}/google/protobuf/internal/builder.py")
-        if (NOT EXISTS ${builder_py})
-            set(builder_py_url "https://raw.githubusercontent.com/protocolbuffers/protobuf/main/python/google/protobuf/internal/builder.py")
-            message("Getting builder.py from ${builder_py_url}")
-            execute_process(COMMAND wget ${builder_py_url} -O ${builder_py})
-        endif ()
-
         set(genkiml_root ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../../)
+        set(APPLE_M1 APPLE AND ${CMAKE_SYSTEM_PROCESSOR} STREQUAL aarch64)
 
-        if (APPLE)
-            set(requirements_txt ${genkiml_root}/requirements-macos.txt)
+        if (APPLE_M1)
+            set(requirements_txt ${genkiml_root}/requirements-m1.txt)
         else ()
             set(requirements_txt ${genkiml_root}/requirements.txt)
         endif ()
@@ -38,6 +31,17 @@ function (genkiml_convert_model model_filepath output_path)
         cmake_path(CONVERT ${model_filepath} TO_NATIVE_PATH_LIST model_path_native)
 
         execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r ${requirements_txt})
+
+        if (APPLE_M1)
+            set(builder_py "${Python_SITELIB}/google/protobuf/internal/builder.py")
+
+            if (NOT EXISTS ${builder_py})
+                set(builder_py_url "https://raw.githubusercontent.com/protocolbuffers/protobuf/main/python/google/protobuf/internal/builder.py")
+                message("Getting builder.py from ${builder_py_url}")
+                execute_process(COMMAND wget ${builder_py_url} -O ${builder_py})
+            endif ()
+        endif()
+
         execute_process(COMMAND ${Python_EXECUTABLE} ${genkiml_root}/genkiml.py ${model_path_native} --model-only --output-path ${model_out_path_native})
 
         file(RENAME ${model_out_path}/model.onnx ${output_path}/${model_name}.onnx)
