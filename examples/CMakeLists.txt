@@ -25,4 +25,4 @@ if (Python_FOUND)
                     )
 endif()
 
-#genkiml_example(keras "${CMAKE_CURRENT_SOURCE_DIR}/keras/fc_model")
+genkiml_example(keras "${CMAKE_CURRENT_SOURCE_DIR}/keras/fc_model")
