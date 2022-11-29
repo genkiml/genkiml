@@ -45,20 +45,30 @@ jobs:
         with:
           submodules: 'recursive'
 
-      - name: Setup directories
-        run: mkdir build_release build_debug build_tests_debug build_tests_release
+      - name: Cache CMake
+        id: cache-cmake
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-cmake
+        with:
+          path: ${{ github.workspace }}/cmake-build-debug/
+          key: ${{ runner.os }}-build-${{ env.cache-name }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
 
       - name: Setup MSVC
         if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
 
       - name: CMake Configure (Debug)
-        run: cmake -B build_debug -DCMAKE_BUILD_TYPE=Debug -DGENKIML_BUILD_TESTS=ON -DGENKIML_BUILD_EXAMPLES=ON ${{ matrix.config.extra_cmake_flags }} -DCMAKE_C_COMPILER=${{ matrix.config.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
+        run: cmake -B cmake-build-debug -Wno-dev -DCMAKE_BUILD_TYPE=Debug -DGENKIML_BUILD_TESTS=ON -DGENKIML_BUILD_EXAMPLES=ON ${{ matrix.config.extra_cmake_flags }} -DCMAKE_C_COMPILER=${{ matrix.config.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
 
       - name: CMake Build (Debug)
-        run: cmake --build build_debug -- ${{ matrix.config.build_options }}
+        run: cmake --build cmake-build-debug -- ${{ matrix.config.build_options }}
 
       - name: Run tests
         run: |
-          cmake --build build_debug --target genkiml_tests
-          ./build_debug/tests/genkiml_tests
+          cmake --build cmake-build-debug --target genkiml_tests
+          ./cmake-build-debug/tests/genkiml_tests

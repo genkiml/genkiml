@@ -8,7 +8,6 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/convert_model.cmake)
 
 set(ONNXRUNTIME_VERSION "1.13.1")
 
-
 if (NOT TARGET fmt)
     fetch_from_git(fmt "https://github.com/fmtlib/fmt.git")
 endif ()
