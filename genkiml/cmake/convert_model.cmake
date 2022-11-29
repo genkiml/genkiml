@@ -15,7 +15,12 @@ function (genkiml_convert_model model_filepath output_path)
         endif ()
 
         set(genkiml_root ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../../)
-        set(APPLE_M1 ${APPLE} AND ${CMAKE_SYSTEM_PROCESSOR} STREQUAL aarch64)
+
+        if (APPLE AND ${CMAKE_SYSTEM_PROCESSOR} STREQUAL arm64)
+            set(APPLE_M1 TRUE)
+        else()
+            set(APPLE_M1 FALSE)
+        endif()
 
         message("CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
         message("CMAKE_SYSTEM_PROCESSOR: ${CMAKE_SYSTEM_PROCESSOR}")
