@@ -8,6 +8,7 @@ function (genkiml_convert_model model_filepath output_path)
     find_package(Python COMPONENTS Interpreter)
 
     if (Python_FOUND)
+        set(genkiml_root ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../../)
         set(venv ${CMAKE_BINARY_DIR}/.venv)
 
         if (NOT EXISTS ${venv})
@@ -39,8 +40,6 @@ function (genkiml_convert_model model_filepath output_path)
                 endif ()
             endif()
         endif()
-
-        set(genkiml_root ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../../)
 
         get_filename_component(model_name ${model_filepath} NAME_WE)
         set(model_out_path ${output_path}/${model_name})
