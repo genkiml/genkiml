@@ -80,7 +80,7 @@ add_library(${genkiml_lib}
 target_include_directories(${genkiml_lib}
                            PUBLIC
                            ${CMAKE_CURRENT_SOURCE_DIR}/source
-#                           ${onnxruntime_source_dir}/include/onnxruntime/core/session
+                           ${onnxruntime_source_dir}/include/onnxruntime/core/session
                            )
 
 target_link_libraries(${genkiml_lib}
