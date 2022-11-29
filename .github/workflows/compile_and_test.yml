@@ -24,7 +24,7 @@ jobs:
             name: "Windows Latest - MSVC",
             os: windows-latest,
             cc: "cl", cxx: "cl",
-            extra_cmake_flags: "-G \"Visual Studio 16\"",
+            extra_cmake_flags: "-G Ninja",
           }
 #          - {
 #            name: "MacOS Latest - Clang",
