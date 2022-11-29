@@ -34,7 +34,9 @@ jobs:
 #            build_options: "-j16",
 #          }
           - {
-            name: "Ubuntu Latest"
+            name: "Ubuntu Latest",
+            os: ubuntu-latest,
+            cc: "cc", cxx: "c++",
           }
 
     steps:
