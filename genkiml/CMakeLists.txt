@@ -22,10 +22,10 @@ endif ()
 
 fetch_from_git(cmrc https://github.com/vector-of-bool/cmrc.git ADD_SUBDIRECTORY)
 
-#fetch_from_git(onnxruntime "https://github.com/microsoft/onnxruntime.git"
-#               GIT_TAG main
-#               SOURCE_DIRECTORY_VAR onnxruntime_source_dir
-#               BINARY_DIRECTORY_VAR onnxruntime_binary_dir)
+fetch_from_git(onnxruntime "https://github.com/microsoft/onnxruntime.git"
+               GIT_TAG main
+               SOURCE_DIRECTORY_VAR onnxruntime_source_dir
+               BINARY_DIRECTORY_VAR onnxruntime_binary_dir)
 
 if (NOT GENKIML_BUILD_ONNXRUNTIME_STATIC_LIB)
     message("Using dynamic library for onnxruntime")
