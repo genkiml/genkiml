@@ -61,11 +61,13 @@ jobs:
       - name: Setup MSVC
         if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
+        
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v4
+          with:
+            python-version: '3.9'
 
       - name: CMake Configure (Debug)
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
         run: cmake -B cmake-build-debug -Wno-dev -DCMAKE_BUILD_TYPE=Debug -DGENKIML_BUILD_TESTS=ON -DGENKIML_BUILD_EXAMPLES=ON ${{ matrix.config.extra_cmake_flags }} -DCMAKE_C_COMPILER=${{ matrix.config.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
 
       - name: CMake Build (Debug)
