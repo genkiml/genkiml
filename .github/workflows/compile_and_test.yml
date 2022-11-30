@@ -68,27 +68,6 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-#          cache: 'pip'
-#      - run: pip install -r requirements.txt
-
-      - id: python_cache
-        uses: actions/cache@v3
-        with:
-          path: .venv
-          key: pip-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('requirements.txt') }}
-
-      - if: steps.python_cache.outputs.cache-hit != 'true'
-        run: |
-          # Check if venv exists (restored from secondary keys if any, and delete)
-          # You might not need this line if you only have one primary key for the venv caching
-          # I kept it in my code as a fail-safe
-          if [ -d ".venv" ]; then rm -rf .venv; fi
-
-          # Re-create the venv
-          python -m venv .venv
-
-          # Install dependencies
-          .venv/Scripts/python.exe -m pip install -r requirements.txt
 
       - name: CMake Configure (Debug)
         env:
