@@ -8,7 +8,7 @@ function (genkiml_convert_model model_filepath output_path)
     find_package(Python COMPONENTS Interpreter)
 
     if (Python_FOUND)
-        set(genkiml_root ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../../)
+        set(genkiml_root ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../..)
         set(venv ${CMAKE_BINARY_DIR}/.venv)
 
         if (NOT EXISTS ${venv})
@@ -16,13 +16,12 @@ function (genkiml_convert_model model_filepath output_path)
             execute_process(COMMAND ${Python_EXECUTABLE} -m venv ${venv})
         endif()
 
-        message("Activating virtual environment: ${venv}")
-        if (MSVC)
-            cmake_path(CONVERT ${venv}/Scripts/activate.bat TO_NATIVE_PATH_LIST venv_activate_bat)
-            execute_process(COMMAND ${venv_activate_bat} COMMAND_ERROR_IS_FATAL ANY)
-        else ()
-            execute_process(COMMAND source ${venv}/bin/activate COMMAND_ERROR_IS_FATAL ANY)
-        endif ()
+        # A trick to make sure cmake is using the virtual environment we've created
+        set(ENV{VIRTUAL_ENV} ${venv})
+        set(Python_FIND_VIRTUALENV FIRST)
+        unset (Python_EXECUTABLE)
+        find_package(Python COMPONENTS Interpreter)
+        message("Python executable: ${Python_EXECUTABLE}")
 
         if (APPLE_M1)
             set(requirements_txt ${genkiml_root}/requirements-m1.txt)
@@ -52,6 +51,8 @@ function (genkiml_convert_model model_filepath output_path)
 
         file(RENAME ${model_out_path}/model.onnx ${output_path}/${model_name}.onnx)
         file(REMOVE_RECURSE ${model_out_path})
+
+        unset(ENV{VIRTUAL_ENV} ${venv})
     else ()
         message(WARNING "Python not found")
     endif ()
