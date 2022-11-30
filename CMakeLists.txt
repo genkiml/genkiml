@@ -15,13 +15,13 @@ message("Default python interpreter: ${Python_EXECUTABLE}")
 
 if (NOT DEFINED ENV{PYTHON_VENV})
     set(venv ${CMAKE_SOURCE_DIR}/.venv)
-
-    if (NOT EXISTS ${venv})
-        message("Creating virtual environment at ${venv}")
-        execute_process(COMMAND ${Python_EXECUTABLE} -m venv ${venv} COMMAND_ERROR_IS_FATAL ANY)
-    endif()
 else()
     set(venv $ENV{PYTHON_VENV})
+endif()
+
+if (NOT EXISTS ${venv})
+    message("Creating virtual environment at ${venv}")
+    execute_process(COMMAND ${Python_EXECUTABLE} -m venv ${venv} COMMAND_ERROR_IS_FATAL ANY)
 endif()
 
 message("Using Python virtual environment: ${venv}")

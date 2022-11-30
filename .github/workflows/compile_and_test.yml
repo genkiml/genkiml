@@ -19,6 +19,7 @@ jobs:
     runs-on: ${{ matrix.config.os }}
     env:
       build_directory: "cmake-build-debug"
+      PYTHON_VENV: ${{ github.workspace }}/.venv
     strategy:
       matrix:
         config:
@@ -59,12 +60,10 @@ jobs:
       - name: Cache pip dependencies
         uses: actions/cache@v3
         with:
-          path: ${{ github.workspace }}/.venv
+          path: ${{ env.PYTHON_VENV }}
           key: pip-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('requirements.txt') }}
 
       - name: CMake Configure (Debug)
-        env:
-            PYTHON_VENV: ${{ github.workspace }}/.venv
         run: cmake -B ${{ env.build_directory }} -Wno-dev -DCMAKE_BUILD_TYPE=Debug -DGENKIML_BUILD_TESTS=ON -DGENKIML_BUILD_EXAMPLES=ON ${{ matrix.config.extra_cmake_flags }} -DCMAKE_C_COMPILER=${{ matrix.config.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
 
       - name: CMake Build (Debug)
