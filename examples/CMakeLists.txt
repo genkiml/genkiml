@@ -15,5 +15,11 @@ function(genkiml_example example_name model_filepath)
     endif()
 endfunction()
 
-genkiml_example(keras "${CMAKE_CURRENT_SOURCE_DIR}/keras/fc_model")
 genkiml_example(onnx "${CMAKE_CURRENT_SOURCE_DIR}/onnx/model.onnx")
+
+execute_process(COMMAND ${Python_EXECUTABLE} generate_model.py --model-only
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/keras
+                COMMAND_ERROR_IS_FATAL ANY
+                )
+
+genkiml_example(keras "${CMAKE_CURRENT_SOURCE_DIR}/keras/fc_model")

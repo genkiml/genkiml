@@ -1,0 +1,77 @@
+name: compile_and_test
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build_and_test:
+    name: Build & test on ${{ matrix.config.os }} with ${{ matrix.config.cc }} and ${{ matrix.config.cxx }}.
+    runs-on: ${{ matrix.config.os }}
+    env:
+      build_directory: "cmake-build-debug"
+      PYTHON_VENV: ${{ github.workspace }}/.venv
+    strategy:
+      matrix:
+        config:
+          - {
+            name: "Windows Latest - MSVC",
+            os: windows-latest,
+            cc: "cl", cxx: "cl",
+            extra_cmake_flags: "-G Ninja",
+          }
+          - {
+            name: "MacOS Latest - Clang",
+            os: macos-latest,
+            cc: "cc", cxx: "c++",
+            extra_cmake_flags: "-DCMAKE_OSX_ARCHITECTURES=x86_64" ,
+            build_options: "-j16",
+          }
+          - {
+            name: "Ubuntu Latest",
+            os: ubuntu-latest,
+            cc: "cc", cxx: "c++",
+            build_options: "-j16",
+          }
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+
+      - if: runner.os == 'Windows'
+        name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        
+      - name: Setup Python 3.10
+        id: setup_python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.PYTHON_VENV }}
+          key: pip-${{ steps.setup_python.outputs.python-version }}-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+
+      - name: CMake Configure (Debug)
+        run: cmake -B ${{ env.build_directory }} -Wno-dev -DCMAKE_BUILD_TYPE=Debug -DGENKIML_BUILD_TESTS=ON -DGENKIML_BUILD_EXAMPLES=ON ${{ matrix.config.extra_cmake_flags }} -DCMAKE_C_COMPILER=${{ matrix.config.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
+
+      - name: CMake Build (Debug)
+        run: cmake --build ${{ env.build_directory }} -- ${{ matrix.config.build_options }}
+
+      - name: Run tests
+        run: |
+          cmake --build ${{ env.build_directory }} --target genkiml_tests
+          ./${{ env.build_directory }}/tests/genkiml_tests

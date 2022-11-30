@@ -12,7 +12,7 @@ namespace genki::ml {
 
 static void print_model_info(const Ort::Session& session)
 {
-    constexpr auto print_tensor_info = [](Ort::ConstTensorTypeAndShapeInfo ti)
+    constexpr auto print_tensor_info = [](const auto& ti)
     {
         constexpr std::array type_names = {
                 "UNDEFINED", "FLOAT", "UINT8", "INT8", "UINT16", "INT16",

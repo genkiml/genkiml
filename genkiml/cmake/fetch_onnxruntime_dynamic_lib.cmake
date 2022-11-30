@@ -1,8 +1,6 @@
 function (fetch_onnxruntime_dynamic_lib onnx_lib_version)
 
     if (APPLE OR MSVC OR UNIX)
-#        set(onnx_lib_version "1.13.1")
-
         set(base_url "https://github.com/microsoft/onnxruntime/releases/download/v${onnx_lib_version}")
 
         if (APPLE)
