@@ -6,25 +6,9 @@ function (genkiml_convert_model model_filepath output_path)
     endif()
 
     find_package(Python COMPONENTS Interpreter REQUIRED)
+    message("Using Python interpreter: ${Python_EXECUTABLE}")
 
     set(genkiml_root ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../..)
-    set(venv ${CMAKE_BINARY_DIR}/.venv)
-
-    if (NOT EXISTS ${venv})
-        message("Creating virtual environment at ${venv}")
-        execute_process(COMMAND ${Python_EXECUTABLE} -m venv ${venv})
-    endif()
-
-
-    if (MSVC)
-        set(Python_ROOT_DIR ${venv}/Scripts)
-    else()
-        set(Python_ROOT_DIR ${venv}/bin)
-    endif()
-
-    unset (Python_EXECUTABLE)
-    find_package(Python COMPONENTS Interpreter REQUIRED)
-    message("Python executable: ${Python_EXECUTABLE}")
 
     if (APPLE_M1)
         set(requirements_txt ${genkiml_root}/requirements-m1.txt)
