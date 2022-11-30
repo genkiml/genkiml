@@ -8,6 +8,8 @@ function (genkiml_convert_model model_filepath output_path)
     find_package(Python COMPONENTS Interpreter)
 
     if (Python_FOUND)
+        set(genkiml_root ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../..)
+
         # Github actions can take care of caching pip dependencies
         # Also, this virtualenv approach doesn't seem to work properly there...
         if (NOT $ENV{GITHUB_ACTIONS})
@@ -24,17 +26,15 @@ function (genkiml_convert_model model_filepath output_path)
             unset (Python_EXECUTABLE)
             find_package(Python COMPONENTS Interpreter)
             message("Python executable: ${Python_EXECUTABLE}")
+
+            if (APPLE_M1)
+                set(requirements_txt ${genkiml_root}/requirements-m1.txt)
+            else ()
+                set(requirements_txt ${genkiml_root}/requirements.txt)
+            endif ()
+
+            execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r ${requirements_txt})
         endif()
-
-        set(genkiml_root ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../..)
-
-        if (APPLE_M1)
-            set(requirements_txt ${genkiml_root}/requirements-m1.txt)
-        else ()
-            set(requirements_txt ${genkiml_root}/requirements.txt)
-        endif ()
-
-        execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r ${requirements_txt})
 
         if (APPLE_M1)
             set(builder_py "${Python_SITELIB}/google/protobuf/internal/builder.py")

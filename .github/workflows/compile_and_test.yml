@@ -69,6 +69,7 @@ jobs:
         with:
           python-version: '3.10'
           cache: 'pip'
+        run: pip install -r requirements.txt
 
       - name: CMake Configure (Debug)
         run: cmake -B ${{ env.build_directory }} -Wno-dev -DCMAKE_BUILD_TYPE=Debug -DGENKIML_BUILD_TESTS=ON -DGENKIML_BUILD_EXAMPLES=ON ${{ matrix.config.extra_cmake_flags }} -DCMAKE_C_COMPILER=${{ matrix.config.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
