@@ -25,7 +25,6 @@ function (genkiml_convert_model model_filepath output_path)
             set(Python_FIND_VIRTUALENV FIRST)
             unset (Python_EXECUTABLE)
             find_package(Python COMPONENTS Interpreter)
-            message("Python executable: ${Python_EXECUTABLE}")
 
             if (APPLE_M1)
                 set(requirements_txt ${genkiml_root}/requirements-m1.txt)
@@ -35,6 +34,8 @@ function (genkiml_convert_model model_filepath output_path)
 
             execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r ${requirements_txt})
         endif()
+
+        message("Python executable: ${Python_EXECUTABLE}")
 
         if (APPLE_M1)
             set(builder_py "${Python_SITELIB}/google/protobuf/internal/builder.py")
