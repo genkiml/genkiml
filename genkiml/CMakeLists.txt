@@ -22,11 +22,6 @@ endif ()
 
 fetch_from_git(cmrc https://github.com/vector-of-bool/cmrc.git ADD_SUBDIRECTORY)
 
-fetch_from_git(onnxruntime "https://github.com/microsoft/onnxruntime.git"
-               GIT_TAG main
-               SOURCE_DIRECTORY_VAR onnxruntime_source_dir
-               BINARY_DIRECTORY_VAR onnxruntime_binary_dir)
-
 if (NOT GENKIML_BUILD_ONNXRUNTIME_STATIC_LIB)
     message("Using dynamic library for onnxruntime")
 
@@ -43,12 +38,22 @@ if (NOT GENKIML_BUILD_ONNXRUNTIME_STATIC_LIB)
 else ()
     message("Building static library for onnxruntime")
 
+    fetch_from_git(onnxruntime "https://github.com/microsoft/onnxruntime.git"
+                   GIT_TAG main
+                   SOURCE_DIRECTORY_VAR onnxruntime_source_dir
+                   BINARY_DIRECTORY_VAR onnxruntime_binary_dir)
+
     set(onnxruntime_USE_CUDA OFF)
     set(onnxruntime_BUILD_UNIT_TESTS OFF)
     add_subdirectory(${onnxruntime_source_dir}/cmake ${onnxruntime_binary_dir})
 
     set(onnxruntime_libs onnxruntime)
     add_library(onnxruntime_libs INTERFACE)
+
+    target_include_directories(onnxruntime_libs
+                               PUBLIC
+                               ${onnxruntime_source_dir}/include/onnxruntime/core/session
+                               )
 
     # TODO: Look into the minimal set of libraries to link for our use of onnxruntime
     target_link_libraries(onnxruntime_libs
@@ -80,7 +85,6 @@ add_library(${genkiml_lib}
 target_include_directories(${genkiml_lib}
                            PUBLIC
                            ${CMAKE_CURRENT_SOURCE_DIR}/source
-                           ${onnxruntime_source_dir}/include/onnxruntime/core/session
                            )
 
 target_link_libraries(${genkiml_lib}
