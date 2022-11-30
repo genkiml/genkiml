@@ -49,7 +49,7 @@ jobs:
           submodules: 'recursive'
 
       - if: runner.os == 'Windows'
-#        name: Setup MSVC
+        name: Setup MSVC
 #        if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
         
