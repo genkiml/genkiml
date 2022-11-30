@@ -15,8 +15,6 @@ function (genkiml_convert_model model_filepath output_path)
         execute_process(COMMAND ${Python_EXECUTABLE} -m venv ${venv})
     endif()
 
-    # A trick to make sure cmake uses the virtual environment we've created
-    unset (Python_EXECUTABLE)
 
     if (MSVC)
         set(Python_ROOT_DIR ${venv}/Scripts)
@@ -24,6 +22,7 @@ function (genkiml_convert_model model_filepath output_path)
         set(Python_ROOT_DIR ${venv}/bin)
     endif()
 
+    unset (Python_EXECUTABLE)
     find_package(Python COMPONENTS Interpreter REQUIRED)
     message("Python executable: ${Python_EXECUTABLE}")
 
@@ -55,6 +54,4 @@ function (genkiml_convert_model model_filepath output_path)
 
     file(RENAME ${model_out_path}/model.onnx ${output_path}/${model_name}.onnx)
     file(REMOVE_RECURSE ${model_out_path})
-
-    unset(ENV{VIRTUAL_ENV} ${venv})
 endfunction ()
