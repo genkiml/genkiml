@@ -5,6 +5,7 @@ function (genkiml_convert_model model_filepath output_path)
         set(APPLE_M1 FALSE)
     endif()
 
+    message("Virtual env: $ENV{VIRTUAL_ENV}")
     set(Python_FIND_VIRTUALENV FIRST)
     find_package(Python COMPONENTS Interpreter)
 
