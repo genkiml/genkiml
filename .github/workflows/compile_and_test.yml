@@ -62,7 +62,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ env.PYTHON_VENV }}
-          key: ${{ runner.os }}-pip-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('requirements.txt') }}
+          key: pip-${{ steps.setup_python.outputs.python-version }}-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
 
       - name: CMake Configure (Debug)
         run: cmake -B ${{ env.build_directory }} -Wno-dev -DCMAKE_BUILD_TYPE=Debug -DGENKIML_BUILD_TESTS=ON -DGENKIML_BUILD_EXAMPLES=ON ${{ matrix.config.extra_cmake_flags }} -DCMAKE_C_COMPILER=${{ matrix.config.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
