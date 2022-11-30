@@ -1,32 +1,5 @@
 function (genkiml_convert_model model_filepath output_path)
-    if (APPLE AND ${CMAKE_SYSTEM_PROCESSOR} STREQUAL arm64)
-        set(APPLE_M1 TRUE)
-    else()
-        set(APPLE_M1 FALSE)
-    endif()
-
-    find_package(Python COMPONENTS Interpreter REQUIRED)
-    message("Using Python interpreter: ${Python_EXECUTABLE}")
-
     set(genkiml_root ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../..)
-
-    if (APPLE_M1)
-        set(requirements_txt ${genkiml_root}/requirements-m1.txt)
-    else ()
-        set(requirements_txt ${genkiml_root}/requirements.txt)
-    endif ()
-
-    execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r ${requirements_txt})
-
-    if (APPLE_M1)
-        set(builder_py "${Python_SITELIB}/google/protobuf/internal/builder.py")
-
-        if (NOT EXISTS ${builder_py})
-            set(builder_py_url "https://raw.githubusercontent.com/protocolbuffers/protobuf/main/python/google/protobuf/internal/builder.py")
-            message("Getting builder.py from ${builder_py_url}")
-            execute_process(COMMAND wget ${builder_py_url} -O ${builder_py})
-        endif ()
-    endif()
 
     get_filename_component(model_name ${model_filepath} NAME_WE)
     set(model_out_path ${output_path}/${model_name})
