@@ -23,19 +23,19 @@ jobs:
     strategy:
       matrix:
         config:
-#          - {
-#            name: "Windows Latest - MSVC",
-#            os: windows-latest,
-#            cc: "cl", cxx: "cl",
-#            extra_cmake_flags: "-G Ninja",
-#          }
-#          - {
-#            name: "MacOS Latest - Clang",
-#            os: macos-latest,
-#            cc: "cc", cxx: "c++",
-#            extra_cmake_flags: "-DCMAKE_OSX_ARCHITECTURES=x86_64" ,
-#            build_options: "-j16",
-#          }
+          - {
+            name: "Windows Latest - MSVC",
+            os: windows-latest,
+            cc: "cl", cxx: "cl",
+            extra_cmake_flags: "-G Ninja",
+          }
+          - {
+            name: "MacOS Latest - Clang",
+            os: macos-latest,
+            cc: "cc", cxx: "c++",
+            extra_cmake_flags: "-DCMAKE_OSX_ARCHITECTURES=x86_64" ,
+            build_options: "-j16",
+          }
           - {
             name: "Ubuntu Latest",
             os: ubuntu-latest,
