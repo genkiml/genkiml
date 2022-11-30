@@ -9,6 +9,8 @@ option(GENKIML_BUILD_TESTS "Build Genki ML examples" ON)
 option(GENKIML_BUILD_EXAMPLES "Build Genki ML examples" ON)
 option(GENKIML_BUILD_ONNXRUNTIME_STATIC_LIB "Build and link static library for onnxruntime" OFF)
 
+message("Github actions: $ENV{GITHUB_ACTIONS}")
+
 add_subdirectory(genkiml)
 
 if (${GENKIML_BUILD_EXAMPLES})
