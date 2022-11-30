@@ -92,7 +92,7 @@ jobs:
 
       - name: CMake Configure (Debug)
         env:
-            VIRTUAL_ENV: ${{ GITHUB_WORKSPACE }}/.venv
+            VIRTUAL_ENV: ${{ env.GITHUB_WORKSPACE }}/.venv
         run: cmake -B ${{ env.build_directory }} -Wno-dev -DCMAKE_BUILD_TYPE=Debug -DGENKIML_BUILD_TESTS=ON -DGENKIML_BUILD_EXAMPLES=ON ${{ matrix.config.extra_cmake_flags }} -DCMAKE_C_COMPILER=${{ matrix.config.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }}
 
       - name: CMake Build (Debug)
