@@ -48,8 +48,9 @@ jobs:
         with:
           submodules: 'recursive'
 
+      - if: runner.os == 'Windows'
       - name: Setup MSVC
-        if: runner.os == 'Windows'
+#        if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
         
       - name: Setup Python 3.10
