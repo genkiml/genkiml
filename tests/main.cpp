@@ -4,8 +4,6 @@
 
 using namespace boost::ut;
 
-int foo = 42;
-
 int main()
 {
     "simple model"_test = [] {
