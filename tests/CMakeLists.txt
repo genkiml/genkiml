@@ -1,4 +1,4 @@
-include(${CMAKE_SOURCE_DIR}/genkiml/cmake/fetch_from_git.cmake)
+include(${GENKIML_ROOT_DIRECTORY}/genkiml/cmake/fetch_from_git.cmake)
 
 fetch_from_git(boost-ut https://github.com/boost-ext/ut.git)
 

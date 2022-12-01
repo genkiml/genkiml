@@ -9,6 +9,7 @@ option(GENKIML_BUILD_TESTS "Build Genki ML examples" ON)
 option(GENKIML_BUILD_EXAMPLES "Build Genki ML examples" ON)
 option(GENKIML_BUILD_ONNXRUNTIME_STATIC_LIB "Build and link static library for onnxruntime" OFF)
 
+set(GENKIML_ROOT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 include(${CMAKE_CURRENT_SOURCE_DIR}/genkiml/cmake/genkiml_python.cmake)
 
 add_subdirectory(genkiml)
