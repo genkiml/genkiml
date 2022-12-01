@@ -51,7 +51,7 @@ else ()
     add_library(onnxruntime_libs INTERFACE)
 
     target_include_directories(onnxruntime_libs
-                               PUBLIC
+                               INTERFACE
                                ${onnxruntime_source_dir}/include/onnxruntime/core/session
                                )
 
