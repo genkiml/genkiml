@@ -100,7 +100,7 @@ function (genkiml_compile_model target_name model_filepath)
     genkiml_convert_model(${model_filepath} ${model_out_dir})
     get_filename_component(model_name ${model_filepath} NAME_WE)
 
-    set(model_lib _${model_name})
+    set(model_lib _${target_name}_${model_name})
     set(genkiml_src ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../genkiml/source)
 
     cmrc_add_resource_library(${model_lib}
