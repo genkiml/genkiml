@@ -111,7 +111,7 @@ function (genkiml_compile_model target_name model_filepath)
                               )
 
     target_sources(${model_lib} PRIVATE ${genkiml_src}/load_model.cpp)
-    target_link_libraries(${model_lib} PUBLIC fmt GSL)
+    target_link_libraries(${model_lib} PUBLIC fmt range-v3 GSL)
 
     target_link_libraries(${target_name} PUBLIC ${model_lib})
 endfunction ()
