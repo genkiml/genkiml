@@ -1,6 +1,6 @@
+#include <cmrc/cmrc.hpp>
 #include <fmt/format.h>
-#include "cmrc/cmrc.hpp"
-#include "genkiml.h"
+#include "genkiml/genkiml.h"
 
 CMRC_DECLARE(files);
 
@@ -13,7 +13,7 @@ std::unique_ptr<Model> load_model(std::string_view model_name)
     auto       models_dir = fs.iterate_directory(prefix);
     const auto num_models = std::distance(models_dir.begin(), models_dir.end());
 
-    // If you have multiple models in the resource libarary, you must specify which one you want to load
+    // If you have multiple models in the resource library, you must specify which one you want to load
     assert(num_models == 1 || !model_name.empty());
 
     const auto filename = model_name.empty()
