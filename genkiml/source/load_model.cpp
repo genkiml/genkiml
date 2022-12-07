@@ -5,15 +5,20 @@
 CMRC_DECLARE(files);
 
 namespace genki::ml {
-std::unique_ptr<Model> load_model()
+std::unique_ptr<Model> load_model(std::string_view model_name)
 {
     constexpr auto prefix = "models";
 
-    auto fs         = cmrc::files::get_filesystem();
-    auto models_dir = fs.iterate_directory(prefix);
-    assert(std::distance(models_dir.begin(), models_dir.end()) == 1);
+    auto       fs         = cmrc::files::get_filesystem();
+    auto       models_dir = fs.iterate_directory(prefix);
+    const auto num_models = std::distance(models_dir.begin(), models_dir.end());
+    assert(num_models == 1 || !model_name.empty());
 
-    const auto model = fmt::format("{}/{}", prefix, (*models_dir.begin()).filename());
+    const auto filename = model_name.empty()
+                          ? (*models_dir.begin()).filename()
+                          : std::string(model_name);
+
+    const auto model = fmt::format("{}/{}.onnx", prefix, filename);
 
     assert(fs.is_file(model));
 

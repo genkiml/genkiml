@@ -100,15 +100,20 @@ function (genkiml_compile_model target_name model_filepath)
     genkiml_convert_model(${model_filepath} ${model_out_dir})
     get_filename_component(model_name ${model_filepath} NAME_WE)
 
-    set(model_lib _${target_name}_${model_name})
+    set(model_lib _${target_name}_models)
     set(genkiml_src ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../genkiml/source)
 
-    cmrc_add_resource_library(${model_lib}
-                              NAMESPACE files
-                              WHENCE ${model_out_dir}
-                              PREFIX models
-                              ${model_out_dir}/${model_name}.onnx
-                              )
+    if (NOT TARGET ${model_lib})
+        cmrc_add_resource_library(${model_lib}
+                                  NAMESPACE files
+                                  )
+    endif()
+
+    cmrc_add_resources(${model_lib}
+                       WHENCE ${model_out_dir}
+                       PREFIX models
+                       ${model_out_dir}/${model_name}.onnx
+                       )
 
     target_sources(${model_lib} PRIVATE ${genkiml_src}/load_model.cpp)
     target_link_libraries(${model_lib} PUBLIC fmt range-v3 GSL)
