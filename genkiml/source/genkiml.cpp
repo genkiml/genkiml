@@ -6,7 +6,7 @@
 #include <range/v3/numeric.hpp>
 #include <string>
 
-#include "genkiml.h"
+#include "genkiml/genkiml.h"
 
 namespace genki::ml {
 

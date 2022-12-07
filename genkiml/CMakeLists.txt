@@ -83,8 +83,13 @@ add_library(${genkiml_lib}
             ${CMAKE_CURRENT_SOURCE_DIR}/source/genkiml.cpp)
 
 target_include_directories(${genkiml_lib}
-                           PUBLIC
-                           ${CMAKE_CURRENT_SOURCE_DIR}/source
+                           PRIVATE
+                           ${CMAKE_CURRENT_SOURCE_DIR}/include
+                           )
+
+target_include_directories(${genkiml_lib}
+                           INTERFACE
+                           ${CMAKE_CURRENT_SOURCE_DIR}/include
                            )
 
 target_link_libraries(${genkiml_lib}
@@ -116,7 +121,7 @@ function (genkiml_compile_model target_name model_filepath)
                        )
 
     target_sources(${model_lib} PRIVATE ${genkiml_src}/load_model.cpp)
-    target_link_libraries(${model_lib} PUBLIC fmt range-v3 GSL)
+    target_link_libraries(${model_lib} PRIVATE genkiml)
 
     target_link_libraries(${target_name} PUBLIC ${model_lib})
 endfunction ()
