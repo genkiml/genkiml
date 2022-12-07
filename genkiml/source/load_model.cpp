@@ -16,9 +16,9 @@ std::unique_ptr<Model> load_model(std::string_view model_name)
 
     const auto filename = model_name.empty()
                           ? (*models_dir.begin()).filename()
-                          : std::string(model_name);
+                          : fmt::format("{}.onnx", model_name);
 
-    const auto model = fmt::format("{}/{}.onnx", prefix, filename);
+    const auto model = fmt::format("{}/{}", prefix, filename);
 
     assert(fs.is_file(model));
 
