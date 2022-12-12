@@ -22,3 +22,4 @@ endfunction()
 
 add_subdirectory(onnx)
 add_subdirectory(keras)
+add_subdirectory(windowed_model)
