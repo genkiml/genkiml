@@ -45,7 +45,7 @@ jobs:
         with:
           submodules: 'recursive'
           
-      -name: Runner info
+      - name: Runner info
         run: echo "Runner OS: ${{runner.os}}"
   
       - if: runner.os == 'Windows'
