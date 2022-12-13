@@ -35,7 +35,7 @@ int main()
         const auto [norm_x, norm_y] = GLFW::normalize(GLFW::get_mouse_pos());
         fmt::print("({:.2f} {:.2f}), dt: {} ms\n", norm_x, norm_y, dt.count());
 
-        while (sc::steady_clock::now() < now + sc::milliseconds(10))
-            std::this_thread::sleep_for(sc::microseconds(500));
+        // Just do a busy-loop. Windows' sleep/wakeup overhead is ~15ms
+        while (sc::steady_clock::now() < now + sc::milliseconds(10)) {}
     }
 }
