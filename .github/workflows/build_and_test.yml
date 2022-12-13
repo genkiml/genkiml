@@ -49,6 +49,10 @@ jobs:
         name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
         
+      - if: runner.os == 'Ubuntu':
+        name: Install system packages
+        run: sudo apt install libxrandr-dev libxinerama-dev libxi-dev -y
+        
       - name: Setup Python 3.10
         id: setup_python
         uses: actions/setup-python@v4
