@@ -13,7 +13,7 @@ int main()
 {
     namespace sc = std::chrono;
 
-    for (auto sig: {SIGINT, SIGTERM, SIGKILL, SIGABRT})
+    for (auto sig: {SIGINT, SIGTERM, SIGABRT})
         signal(sig, signal_handler);
 
     constexpr size_t window_size = 128;
