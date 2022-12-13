@@ -44,6 +44,9 @@ struct WindowedModel
 
     auto push_sample(const Sample& sample, double timestamp) -> std::optional<BufferViews>
     {
+        if (!timestamps.empty() && (timestamp <= timestamps.back() || timestamps.back() < prev_inference_ts))
+            fmt::print("Warning: Timestamps not in strictly increasing order. Timestamp: {}, previous inference: {}\n", timestamp, prev_inference_ts);
+
         if (get_num_samples() == WindowSize)
         {
             for (auto& signal: signals)
