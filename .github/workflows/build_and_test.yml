@@ -49,7 +49,7 @@ jobs:
         name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
         
-      - if: runner.os == 'ubuntu-latest'
+      - if: runner.os == 'Linux'
         name: Install system packages
         run: sudo apt install libxrandr-dev libxinerama-dev libxi-dev -y
         
