@@ -1,7 +1,9 @@
-#include <genkiml/windowed_model.h>
+#include <atomic>
+#include <csignal>
 #include <fmt/format.h>
 #include <thread>
 
+#include <genkiml/windowed_model.h>
 #include "glfw.h"
 
 std::atomic_bool is_running = true;

@@ -38,7 +38,8 @@ else ()
     set(requirements_txt ${GENKIML_ROOT_DIRECTORY}/requirements.txt)
 endif ()
 
-execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r ${requirements_txt})
+execute_process(COMMAND ${Python_EXECUTABLE} -m ensurepip --upgrade COMMAND_ERROR_IS_FATAL ANY)
+execute_process(COMMAND ${Python_EXECUTABLE} -m pip install -r ${requirements_txt} COMMAND_ERROR_IS_FATAL ANY)
 
 if (APPLE_M1)
     set(builder_py "${Python_SITELIB}/google/protobuf/internal/builder.py")

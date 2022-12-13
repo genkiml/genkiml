@@ -1,3 +1,5 @@
+project(genkiml_examples)
+
 function(genkiml_example example_name)
     set(flag_args "")
     set(single_value_args MODEL)

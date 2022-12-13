@@ -1,6 +1,7 @@
 #pragma once
 
 #include <deque>
+#include <fmt/format.h>
 #include <optional>
 #include <utility>
 
