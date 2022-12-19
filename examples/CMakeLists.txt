@@ -1,9 +1,16 @@
-function(genkiml_example example_name model_filepath)
+project(genkiml_examples)
+
+function(genkiml_example example_name)
+    set(flag_args "")
+    set(single_value_args MODEL)
+    set(multi_value_args SOURCES LINK_LIBRARIES)
+    cmake_parse_arguments(PARSED_ARGS "${flag_args}" "${single_value_args}" "${multi_value_args}" ${ARGN})
+
     set(executable_name genkiml_example_${example_name})
 
-    add_executable(${executable_name} ${CMAKE_CURRENT_SOURCE_DIR}/${example_name}/main.cpp)
-    genkiml_compile_model(${executable_name} ${model_filepath})
-    target_link_libraries(${executable_name} PUBLIC genkiml)
+    add_executable(${executable_name} ${PARSED_ARGS_SOURCES})
+    genkiml_compile_model(${executable_name} ${PARSED_ARGS_MODEL})
+    target_link_libraries(${executable_name} PUBLIC genkiml ${PARSED_ARGS_LINK_LIBRARIES})
 
     # TODO: Figure out how to do this less explicitly
     if (MSVC)
@@ -15,11 +22,6 @@ function(genkiml_example example_name model_filepath)
     endif()
 endfunction()
 
-genkiml_example(onnx "${CMAKE_CURRENT_SOURCE_DIR}/onnx/model.onnx")
-
-execute_process(COMMAND ${Python_EXECUTABLE} generate_model.py --model-only
-                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/keras
-                COMMAND_ERROR_IS_FATAL ANY
-                )
-
-genkiml_example(keras "${CMAKE_CURRENT_SOURCE_DIR}/keras/fc_model")
+add_subdirectory(onnx)
+add_subdirectory(keras)
+add_subdirectory(windowed_model)

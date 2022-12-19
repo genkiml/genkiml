@@ -4,7 +4,12 @@ fetch_from_git(boost-ut https://github.com/boost-ext/ut.git)
 
 set(executable_name genkiml_tests)
 
-add_executable(${executable_name} ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+add_executable(${executable_name}
+               ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+               ${CMAKE_CURRENT_SOURCE_DIR}/model.cpp
+               ${CMAKE_CURRENT_SOURCE_DIR}/windowed_model.cpp
+               )
+
 genkiml_compile_model(${executable_name} ${CMAKE_CURRENT_SOURCE_DIR}/test_model.onnx)
 
 target_compile_definitions(${executable_name} PRIVATE BOOST_UT_DISABLE_MODULE=1)

@@ -83,8 +83,13 @@ add_library(${genkiml_lib}
             ${CMAKE_CURRENT_SOURCE_DIR}/source/genkiml.cpp)
 
 target_include_directories(${genkiml_lib}
-                           PUBLIC
-                           ${CMAKE_CURRENT_SOURCE_DIR}/source
+                           PRIVATE
+                           ${CMAKE_CURRENT_SOURCE_DIR}/include
+                           )
+
+target_include_directories(${genkiml_lib}
+                           INTERFACE
+                           ${CMAKE_CURRENT_SOURCE_DIR}/include
                            )
 
 target_link_libraries(${genkiml_lib}
@@ -100,18 +105,23 @@ function (genkiml_compile_model target_name model_filepath)
     genkiml_convert_model(${model_filepath} ${model_out_dir})
     get_filename_component(model_name ${model_filepath} NAME_WE)
 
-    set(model_lib _${model_name})
+    set(model_lib _${target_name}_models)
     set(genkiml_src ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../genkiml/source)
 
-    cmrc_add_resource_library(${model_lib}
-                              NAMESPACE files
-                              WHENCE ${model_out_dir}
-                              PREFIX models
-                              ${model_out_dir}/${model_name}.onnx
-                              )
+    if (NOT TARGET ${model_lib})
+        cmrc_add_resource_library(${model_lib}
+                                  NAMESPACE files
+                                  )
+    endif()
+
+    cmrc_add_resources(${model_lib}
+                       WHENCE ${model_out_dir}
+                       PREFIX models
+                       ${model_out_dir}/${model_name}.onnx
+                       )
 
     target_sources(${model_lib} PRIVATE ${genkiml_src}/load_model.cpp)
-    target_link_libraries(${model_lib} PUBLIC fmt GSL)
+    target_link_libraries(${model_lib} PRIVATE genkiml)
 
     target_link_libraries(${target_name} PUBLIC ${model_lib})
 endfunction ()

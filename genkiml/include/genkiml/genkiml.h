@@ -21,6 +21,6 @@ private:
     std::unique_ptr<Impl> impl;
 };
 
-std::unique_ptr<Model> load_model();
+std::unique_ptr<Model> load_model(std::string_view model_name = "");
 
 } // namespace genki::ml

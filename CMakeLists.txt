@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 project(GenkiML VERSION 0.1.0)
 
-option(GENKIML_BUILD_TESTS "Build Genki ML examples" ON)
+option(GENKIML_BUILD_TESTS "Build Genki ML tests" ON)
 option(GENKIML_BUILD_EXAMPLES "Build Genki ML examples" ON)
 option(GENKIML_BUILD_ONNXRUNTIME_STATIC_LIB "Build and link static library for onnxruntime" OFF)
 
