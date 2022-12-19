@@ -17,6 +17,7 @@ auto linspace(T min, T max, size_t num) noexcept
     using namespace ranges::views;
 
     assert(num > 1);
+    assert(max > min);
 
     return ints(0, ranges::unreachable)
            | transform([=](int i) { return static_cast<T>(i) * (max - min) / static_cast<T>(num - 1) + min; })
